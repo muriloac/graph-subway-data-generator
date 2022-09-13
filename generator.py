@@ -17,7 +17,7 @@ def generate_data(destination, stations, shortest_paths, persons, edges_map_with
 
     with open('resources/out/data.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        writer.writerow(['id', 'time', 'lat', 'lon'])
+        writer.writerow(['person_id', 'time', 'lat', 'lon'])
         for i in range(len(aux)):
             for j in range(len(aux[i])):
                 if aux[i][j][2] is not None or aux[i][j][2] is not None:
@@ -87,12 +87,12 @@ def simulate_path_with_time(person, edges_map_with_weights, stations, clima, chu
         random_int = random.randint(0, 100)
         if random_int < 5:
             time = time + datetime.timedelta(minutes=time_edge)
-            time_list.append((person.id, time,
+            time_list.append((person.id, time.time(),
                               generate_point_on_path_ratio(last_station.lat, last_station.lon, current_station.lat,
                                                            current_station.lon, ratio)))
-        elif 10 > random_int >= 8:
+        elif 10 > random_int >= 5:
             time = time + datetime.timedelta(minutes=time_edge)
-            time_list.append((person.id, time, None))
+            time_list.append((person.id, time.time(), None))
         else:
             time = time + datetime.timedelta(minutes=time_edge)
             time_list.append((person.get_id(), time.time(), current_station.get_coordenadas()))
