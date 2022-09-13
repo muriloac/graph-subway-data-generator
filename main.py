@@ -1,9 +1,21 @@
+import networkx as nx
+
 import EstacaoMetro
+import generator
+import Person
+import datetime
 
-lista_estacoes_csv = "resources/estacoes.csv"
-estacoes_coordenadas_csv = 'resources/stops.txt'
+stations = EstacaoMetro.criar_estacoes()
+# graph of all stations and tracks between them
+G_map = EstacaoMetro.build_station_network()
+# draw map of the T with colors corresponding to lines
+edges_map, colors = zip(*nx.get_edge_attributes(G_map, 'color').items())
+edges_map_with_weights = nx.get_edge_attributes(G_map, 'weight')
+EstacaoMetro.draw_network(G_map, edges_map, color=colors)
+EstacaoMetro.shortest_paths(G_map)
 
-lista = EstacaoMetro.criar_estacoes(lista_estacoes_csv, estacoes_coordenadas_csv)
+shortest_paths = generator.read_paths()
+climate = generator.read_climate_data()
+persons = Person.generate_persons(stations, 60, datetime.datetime(100, 1, 1, 18, 0, 0))
 
-# EstacaoMetro.print_estacoes(lista)
-print(len(lista))
+generator.generate_data(18850, stations, shortest_paths, persons, edges_map_with_weights)

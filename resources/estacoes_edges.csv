@@ -1,0 +1,91 @@
+estacao1,estacao2,tempo,cor
+Tucuruvi,Parada Inglesa,5,blue
+Parada Inglesa,Jardim São Paulo – Ayrton Senna,4,blue
+Jardim São Paulo – Ayrton Senna,Santana,4,blue
+Santana,Carandiru,3,blue
+Carandiru,Portuguesa – Tietê,5,blue
+Portuguesa – Tietê,Armênia,2,blue
+Armênia,Tiradentes,2,blue
+Tiradentes,Luz,2,blue
+Luz,São Bento,6,blue
+São Bento,Sé,1,blue
+Sé,Liberdade,2,blue
+Liberdade,São Joaquim,2,blue
+São Joaquim,Vergueiro,2,blue
+Vergueiro,Paraíso,2,blue
+Paraíso,Ana Rosa,1,blue
+Ana Rosa,Vila Mariana,2,blue
+Vila Mariana,Santa Cruz,2,blue
+Santa Cruz,Praça da Árvore,2,blue
+Praça da Árvore,Saúde,1,blue
+Saúde,São Judas,2,blue
+São Judas,Conceição,2,blue
+Conceição,Jabaquara,2,blue
+Vila Madalena,Santuário N. Sra. de Fátima - Sumaré,3,green
+Santuário N. Sra. de Fátima - Sumaré,Clínicas,4,green
+Clínicas,Paulista,4,green
+Consolação,Trianon MASP,3,green
+Trianon MASP,Brigadeiro,3,green
+Brigadeiro,Paraíso,2,green
+Paraíso,Ana Rosa,5,green
+Ana Rosa,Chácara Klabin,2,green
+Chácara Klabin,Santos – Imigrantes,2,green
+Santos – Imigrantes,Alto do Ipiranga,2,green
+Alto do Ipiranga,Sacomã,2,green
+Sacomã,Tamanduateí,4,green
+Tamanduateí,Vila Prudente,5,green
+Corinthians – Itaquera,Artur Alvim,6,red
+Artur Alvim,Patriarca,7,red
+Patriarca,Guilhermina – Esperança,2,red
+Guilhermina – Esperança,Vila Matilde,2,red
+Vila Matilde,Penha,2,red
+Penha,Carrão,7,red
+Carrão,Tatuapé,7,red
+Tatuapé,Belém,5,red
+Belém,Bresser – Mooca,3,red
+Bresser – Mooca,Brás,2,red
+Brás,Pedro II,2,red
+Pedro II,Sé,2,red
+Sé,Anhangabaú,2,red
+Anhangabaú,República,3,red
+República,Santa Cecília,2,red
+Santa Cecília,Marechal Deodoro,2,red
+Marechal Deodoro,Palmeiras – Barra Funda,2,red
+Luz,República,2,yellow
+República,Higienópolis - Mackenzie,2,yellow
+Higienópolis - Mackenzie,Paulista,2,yellow
+Paulista,Oscar Freire,5,yellow
+Oscar Freire,Fradique Coutinho,5,yellow
+Fradique Coutinho,Faria Lima,2,yellow
+Faria Lima,Pinheiros,2,yellow
+Pinheiros,Butantã,1,yellow
+Butantã,São Paulo – Morumbi,5,yellow
+São Paulo – Morumbi,Vila Sônia,10,yellow
+Capão Redondo,Campo Limpo,4,purple
+Campo Limpo,Vila Das Belezas,4,purple
+Vila Das Belezas,Giovanni Gronchi,4,purple
+Giovanni Gronchi,Santo Amaro,5,purple
+Santo Amaro,Largo Treze,3,purple
+Largo Treze,Adolfo Pinheiro,3,purple
+Adolfo Pinheiro,Alto da Boa Vista,3,purple
+Alto da Boa Vista,Borba Gato,3,purple
+Borba Gato,Brooklin,3,purple
+Brooklin,Campo Belo,3,purple
+Campo Belo,Eucaliptos,4,purple
+Eucaliptos,Moema,3,purple
+Moema,AACD – Servidor,4,purple
+AACD – Servidor,Hospital São Paulo,3,purple
+Hospital São Paulo,Santa Cruz,3,purple
+Santa Cruz,Chácara Klabin,3,purple
+Vila Prudente,Oratório,3,silver
+Oratório,São Lucas,2,silver
+São Lucas,Camilo Haddad,5,silver
+Camilo Haddad,Vila Tolstói,5,silver
+Vila Tolstói,Vila União,3,silver
+Vila União,Jardim Planalto,2,silver
+Jardim Planalto,Sapopemba,3,silver
+Sapopemba,Fazenda da Juta,2,silver
+Fazenda da Juta,São Mateus,2,silver
+São Mateus,Jardim Colonial,3,silver
+República,República,2,black
+Paulista,Consolação,2,black

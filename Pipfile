@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 unidecode = "*"
+networkx = "*"
+matplotlib = "*"
 
 [dev-packages]
 

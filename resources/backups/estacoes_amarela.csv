@@ -1,0 +1,11 @@
+estacao1,estacao2,tempo,cor
+Luz,Republica,2,amarela
+Republica,Higienopolis Mackenzie,2,amarela
+Higienopolis Mackenzie,Paulista,2,amarela
+Paulista,Oscar Freire,5,amarela
+Oscar Freire,Fradique Coutinho,5,amarela
+Fradique Coutinho,Faria Lima,2,amarela
+Faria Lima,Pinheiros,2,amarela
+Pinheiros,Butanta,1,amarela
+Butanta,Sao Paulo Morumbi,5,amarela
+Sao Paulo Morumbi,Vila Sonia,10,amarela
