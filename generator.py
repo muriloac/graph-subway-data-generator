@@ -17,10 +17,13 @@ def generate_data(destination, stations, shortest_paths, persons, edges_map_with
 
     with open('resources/out/data.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        writer.writerow(['id','time', 'lat', 'lon'])
+        writer.writerow(['id', 'time', 'lat', 'lon'])
         for i in range(len(aux)):
             for j in range(len(aux[i])):
-                writer.writerow([aux[i][j][0], aux[i][j][1], aux[i][j][2][0], aux[i][j][2][1]])
+                if aux[i][j][2] is not None or aux[i][j][2] is not None:
+                    writer.writerow([aux[i][j][0], aux[i][j][1], aux[i][j][2][0], aux[i][j][2][1]])
+                else:
+                    writer.writerow([aux[i][j][0], aux[i][j][1], None, None])
 
 
 def generate_point_on_path_ratio(lat1, lon1, lat2, lon2, ratio):
@@ -71,6 +74,7 @@ def simulate_path_with_time(person, edges_map_with_weights, stations, clima, chu
             edge) is not None else edges_map_with_weights.get(
             (path[i + 1], path[i]))
         current_station = (x for x in stations if x.id == path[i + 1]).__next__()
+        last_station = (x for x in stations if x.id == path[i]).__next__()
 
         if chuva == 'sim' and clima == 'quente':
             time_edge = time_edge * 1.7
@@ -79,7 +83,18 @@ def simulate_path_with_time(person, edges_map_with_weights, stations, clima, chu
         elif chuva == 'sim':
             time_edge = time_edge * 1.5
 
-        time = time + datetime.timedelta(minutes=time_edge)
-        time_list.append((person.get_id(), time.time(), current_station.get_coordenadas()))
+        ratio = random.random()
+        random_int = random.randint(0, 100)
+        if random_int < 5:
+            time = time + datetime.timedelta(minutes=time_edge)
+            time_list.append((person.id, time,
+                              generate_point_on_path_ratio(last_station.lat, last_station.lon, current_station.lat,
+                                                           current_station.lon, ratio)))
+        elif 10 > random_int >= 8:
+            time = time + datetime.timedelta(minutes=time_edge)
+            time_list.append((person.id, time, None))
+        else:
+            time = time + datetime.timedelta(minutes=time_edge)
+            time_list.append((person.get_id(), time.time(), current_station.get_coordenadas()))
 
     return time_list
