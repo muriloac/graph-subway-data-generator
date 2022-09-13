@@ -6,9 +6,9 @@ import Person
 import datetime
 
 stations = EstacaoMetro.criar_estacoes()
-# graph of all stations and tracks between them
+
 G_map = EstacaoMetro.build_station_network()
-# draw map of the T with colors corresponding to lines
+
 edges_map, colors = zip(*nx.get_edge_attributes(G_map, 'color').items())
 edges_map_with_weights = nx.get_edge_attributes(G_map, 'weight')
 EstacaoMetro.draw_network(G_map, edges_map, color=colors)

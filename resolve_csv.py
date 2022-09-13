@@ -12,7 +12,6 @@ def normalize(s):
     return s.lower().replace(' ', '')
 
 
-# Read the CSV file, and substitute the station names with the ids from list of stations, and write to a new CSV file
 def resolve_csv(lista_estacoes, estacoes_edge='resources/estacoes_edges.csv'):
     with open(estacoes_edge, 'r', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
