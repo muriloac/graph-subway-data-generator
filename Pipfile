@@ -7,6 +7,9 @@ name = "pypi"
 unidecode = "*"
 networkx = "*"
 matplotlib = "*"
+azure-iot-device = "*"
+brotlipy = "*"
+smaz-py3 = "*"
 
 [dev-packages]
 

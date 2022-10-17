@@ -1,35 +1,75 @@
 import csv
 import datetime
 import random
+import time
+import os
+import asyncio
+from azure.iot.device.aio import IoTHubDeviceClient
 
 from event_variables import CLIMA, CHUVA
 
 
-def generate_data(destination, stations, shortest_paths, persons, edges_map_with_weights):
-    for i in range(len(persons)):
-        persons[i].path = get_path_for_person(persons[i], shortest_paths, destination)
+def generate_data(data):
+    destination, stations, shortest_paths, person, edges_map_with_weights = data
+    person.path = get_path_for_person(person, shortest_paths, destination)
 
-    aux = []
-    for i in range(10):
-        for person in persons:
-            aux.append(simulate_path_with_time(person, edges_map_with_weights, stations, random.choice(CLIMA),
-                                               random.choice(CHUVA)))
+    person_data = simulate_path_with_time(person, edges_map_with_weights, stations, random.choice(CLIMA),
+                                          random.choice(CHUVA))
 
-    with open('resources/out/data.csv', 'w', newline='') as csvfile:
+    with open('resources/out/data.csv', 'a', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        writer.writerow(['person_id', 'time', 'lat', 'lon'])
-        for i in range(len(aux)):
-            for j in range(len(aux[i])):
-                if aux[i][j][2] is not None or aux[i][j][2] is not None:
-                    writer.writerow([aux[i][j][0], aux[i][j][1], aux[i][j][2][0], aux[i][j][2][1]])
-                else:
-                    writer.writerow([aux[i][j][0], aux[i][j][1], None, None])
+        for i in range(len(person_data)):
+            if person_data[i][2] is not None or person_data[i][2] is not None:
+                writer.writerow([person_data[i][0], person_data[i][1].strftime("%H:%M:%S"), person_data[i][2][0],
+                                 person_data[i][2][1],
+                                 person_data[i][3]])
+            else:
+                writer.writerow(
+                    [person_data[i][0], person_data[i][1].strftime("%H:%M:%S"), None, None, person_data[i][3]])
+            csvfile.flush()
+
+        last_time = None
+        current_time = None
+        print("Iniciando envio de dados do dispositivo {}".format(person.id))
+        for i in range(len(person_data)):
+            if last_time is None:
+                last_time = person_data[i][1]
+                current_time = person_data[i][1]
+            else:
+                last_time = current_time
+                current_time = person_data[i][1]
+            time_to_sleep = (datetime.datetime.combine(datetime.date.min, current_time) - datetime.datetime.combine(
+                datetime.date.min, last_time)).seconds
+            if time_to_sleep > 0:
+                print("Esperando {} segundos".format(time_to_sleep))
+                time.sleep(time_to_sleep)
+            if person_data[i][2] is not None or person_data[i][2] is not None:
+                asyncio.run(
+                    send_message(person.id,
+                                 ''.join(map(str, [person_data[i][2][0],
+                                                   person_data[i][2][1],
+                                                   person_data[i][3]]))))
+            else:
+                asyncio.run(
+                    send_message(person.id,
+                                 ''.join(
+                                     map(str, [None, None, person_data[i][3]]))))
+
+
+async def send_message(id, data):
+    conn_str = os.getenv("IOTHUB_DEVICE{}_CONNECTION_STRING".format(id))
+    device_client = IoTHubDeviceClient.create_from_connection_string(conn_str)
+    await device_client.connect()
+    print("Mandando mensagem do dispositivo {}".format(id))
+    await device_client.send_message(data)
+    print("Mensagem enviada do dispositivo {}!".format(id))
+    await device_client.shutdown()
 
 
 def generate_point_on_path_ratio(lat1, lon1, lat2, lon2, ratio):
     lat = lat1 + (lat2 - lat1) * ratio
     lon = lon1 + (lon2 - lon1) * ratio
-    return lat, lon
+    return round(lat, 3), round(lon, 3)
 
 
 def read_climate_data(climate_data_file='resources/clima_chuva.csv'):
@@ -67,6 +107,7 @@ def simulate_path_with_time(person, edges_map_with_weights, stations, clima, chu
     time = person.initial_time
     time_list = []
     path = path.replace("'", '').replace('[', '').replace(']', '').replace(' ', '').split(',')
+    battery = person.initial_battery
 
     for i in range(len(path) - 1):
         edge = (path[i], path[i + 1])
@@ -85,16 +126,16 @@ def simulate_path_with_time(person, edges_map_with_weights, stations, clima, chu
 
         ratio = random.random()
         random_int = random.randint(0, 100)
+        battery = round(battery - 0.005, 3)
+        time = time + datetime.timedelta(minutes=time_edge)
         if random_int < 5:
-            time = time + datetime.timedelta(minutes=time_edge)
             time_list.append((person.id, time.time(),
                               generate_point_on_path_ratio(last_station.lat, last_station.lon, current_station.lat,
-                                                           current_station.lon, ratio)))
+                                                           current_station.lon, ratio), battery))
         elif 10 > random_int >= 5:
-            time = time + datetime.timedelta(minutes=time_edge)
-            time_list.append((person.id, time.time(), None))
+            time_list.append((person.id, time.time(), None, battery))
         else:
-            time = time + datetime.timedelta(minutes=time_edge)
-            time_list.append((person.get_id(), time.time(), current_station.get_coordenadas()))
+            lat, lon = current_station.get_coordenadas()
+            time_list.append((person.get_id(), time.time(), (round(lat, 3), round(lon, 3)), battery))
 
     return time_list

@@ -1,21 +1,52 @@
+import os
+
 import networkx as nx
+import csv
 
 import EstacaoMetro
 import generator
 import Person
-import datetime
+from datetime import datetime
+from multiprocessing import Pool
 
-stations = EstacaoMetro.criar_estacoes()
 
-G_map = EstacaoMetro.build_station_network()
+def main():
+    print("Criando estacoes...")
+    stations = EstacaoMetro.criar_estacoes()
 
-edges_map, colors = zip(*nx.get_edge_attributes(G_map, 'color').items())
-edges_map_with_weights = nx.get_edge_attributes(G_map, 'weight')
-EstacaoMetro.draw_network(G_map, edges_map, color=colors)
-EstacaoMetro.shortest_paths(G_map)
+    print("Criando rede de estacoes...")
+    g_map = EstacaoMetro.build_station_network()
 
-shortest_paths = generator.read_paths()
-climate = generator.read_climate_data()
-persons = Person.generate_persons(stations, 60, datetime.datetime(100, 1, 1, 18, 0, 0))
+    edges_map, colors = zip(*nx.get_edge_attributes(g_map, 'color').items())
+    edges_map_with_weights = nx.get_edge_attributes(g_map, 'weight')
 
-generator.generate_data(18850, stations, shortest_paths, persons, edges_map_with_weights)
+    print("Desenhando o mapa do metro")
+    EstacaoMetro.draw_network(g_map, edges_map, color=colors)
+
+    print("Calculando os caminhos mais curtos")
+    EstacaoMetro.shortest_paths(g_map)
+    shortest_paths = generator.read_paths()
+
+    print("Gerando pessoas")
+    persons = Person.generate_persons(stations, 60, datetime.now())
+
+    print("Quantos dispositivos vão ser simulados? MAX 60")
+    qtd_simulados = int(input('Input: '))
+
+    pool_handler(qtd_simulados, 18850, stations, shortest_paths, persons, edges_map_with_weights)
+
+
+def pool_handler(qtd_simulados, destination, stations, shortest_paths, persons, edges_map_with_weights):
+    p = Pool(qtd_simulados)
+    data = []
+    for i in range(qtd_simulados):
+        data.append((destination, stations, shortest_paths, persons[i], edges_map_with_weights))
+    with open('resources/out/data.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        writer.writerow(['person_id', 'time', 'lat', 'lon', 'battery'])
+        csvfile.close()
+    p.map(generator.generate_data, data)
+
+
+if __name__ == '__main__':
+    main()
